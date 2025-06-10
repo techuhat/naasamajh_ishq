@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+<!-- Previous head content remains the same -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Naasamajh Ishq - A collection of beautiful Urdu poetry and shayari"> <!-- SEO के लिए -->
+  <meta name="description" content="Naasamajh Ishq - A collection of beautiful Urdu poetry and shayari">
   <title>Naasamajh Ishq</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
   <style>
+    /* Previous styles remain the same */
     :root {
       --primary-color: #8B0000;
       --secondary-color: #4B0082;
@@ -41,7 +43,6 @@
     .group:hover .book-flip {
       transform: rotateY(-17deg);
     }
-    /* Poem title list in detail view (card style) */
     .poem-title-card {
       background-color: rgba(255,255,255,0.96);
       border-left: 4px solid var(--primary-color);
@@ -65,6 +66,27 @@
     .modal-overlay {
       background-color: rgba(0, 0, 0, 0.7);
       backdrop-filter: blur(5px);
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .modal-content {
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      padding: 2rem;
+      width: 90%;
+      max-width: 56rem;
+      margin: 1rem;
+      max-height: 85vh;
+      overflow-y: auto;
+      position: relative;
+      transform: translateZ(0);
+      will-change: transform;
     }
     .petal {
       position: absolute;
@@ -97,6 +119,17 @@
       backdrop-filter: blur(10px);
       background-color: rgba(139, 0, 0, 0.6);
     }
+    .site-wrapper {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    main {
+      flex: 1;
+    }
+    footer {
+      margin-top: auto;
+    }
     @media print {
       body {
         width: 100%;
@@ -111,33 +144,18 @@
         margin-bottom: 2rem;
       }
     }
-    .site-wrapper {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    main {
-      flex: 1;
-    }
-    footer {
-      margin-top: auto;
-    }
   </style>
 </head>
 <body class="text-gray-100">
   <div id="root"></div>
   
-  <!-- Load React and ReactDOM first -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
   
-  <!-- Load poetryData.js before React component -->
   <script src="poetryData.js"></script>
   
-  <!-- React component -->
   <script type="text/babel">
-    // Create React component
     function App() {
       const [poetryCollections, setPoetryCollections] = React.useState([]);
       const [selectedCollection, setSelectedCollection] = React.useState(null);
@@ -147,7 +165,6 @@
       const [isMenuOpen, setIsMenuOpen] = React.useState(false);
       const [heartAnimation, setHeartAnimation] = React.useState("");
       
-      // Create petals for animation
       const createPetals = () => {
         const petalsArray = [];
         for (let i = 0; i < 20; i++) {
@@ -164,19 +181,16 @@
       const [petals] = React.useState(createPetals);
 
       React.useEffect(() => {
-        // Load poetry data
         if (window.poetryCollections) {
           setPoetryCollections(window.poetryCollections);
         }
         
-        // Load favorites from localStorage
         const savedFavorites = localStorage.getItem('favorites');
         if (savedFavorites) {
           setFavorites(JSON.parse(savedFavorites));
         }
       }, []);
       
-      // Save favorites to localStorage when they change
       React.useEffect(() => {
         localStorage.setItem('favorites', JSON.stringify(favorites));
       }, [favorites]);
@@ -189,10 +203,12 @@
       
       const handleSelectPoem = (poem) => {
         setSelectedPoem(poem);
+        document.body.style.overflow = 'hidden';
       };
       
       const handleClosePoem = () => {
         setSelectedPoem(null);
+        document.body.style.overflow = '';
       };
       
       const handleCloseCollection = () => {
@@ -209,7 +225,6 @@
         }
       };
       
-      // Add this function to get favorite poems
       const getFavoritePoems = () => {
         return poetryCollections.flatMap(collection =>
           collection.poems
@@ -238,7 +253,6 @@
             <div className="container mx-auto flex items-center justify-between">
               <div className="text-2xl font-bold urdu-text">ناسمجھ عشق</div>
               
-              {/* Mobile Menu Button */}
               <button 
                 className="md:hidden text-white focus:outline-none" 
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -246,7 +260,6 @@
                 <i className={`fas fa-${isMenuOpen ? 'times' : 'bars'} text-2xl`}></i>
               </button>
           
-              {/* Desktop Menu */}
               <div className="hidden md:flex space-x-4">
                 <a href="#" className="hover:text-yellow-200 transition-colors">Home</a>
                 <button 
@@ -260,7 +273,6 @@
               </div>
             </div>
           
-            {/* Mobile Menu Dropdown */}
             <div className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'} absolute top-full left-0 right-0 bg-red-900 shadow-lg py-2`}>
               <div className="container mx-auto px-4 flex flex-col space-y-3">
                 <a href="#" className="text-white hover:text-yellow-200 transition-colors">Home</a>
@@ -373,32 +385,34 @@
                     </div>
                   </div>
                 </div>
-                {selectedPoem && (
-                  <div className="fixed inset-0 modal-overlay flex items-center justify-center z-50">
-                    <div className="paper-texture rounded-lg shadow-2xl p-8 max-w-4xl w-11/12 max-h-90vh overflow-y-auto">
-                      <div className="flex justify-between items-center mb-6">
-                        <h3 className="text-3xl text-gray-800 urdu-text">{selectedPoem.title}</h3>
-                        <div className="flex space-x-4">
-                          <button
-                            onClick={() => toggleFavorite(selectedPoem.id)}
-                            className={`text-2xl ${favorites.includes(selectedPoem.id) ? 'text-red-500' : 'text-gray-400'} ${heartAnimation}`}
-                          >
-                            <i className={`${favorites.includes(selectedPoem.id) ? 'fas' : 'far'} fa-heart`}></i>
-                          </button>
-                          <button
-                            onClick={handleClosePoem}
-                            className="text-2xl text-gray-500 hover:text-gray-800"
-                          >
-                            <i className="fas fa-times"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div className="text-xl text-gray-800 leading-relaxed urdu-text whitespace-pre-line">
-                        {selectedPoem.content}
-                      </div>
+              </div>
+            )}
+            
+            {/* Modal moved outside of collection view so it's available everywhere */}
+            {selectedPoem && (
+              <div className="modal-overlay">
+                <div className="modal-content paper-texture">
+                  <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-3xl text-gray-800 urdu-text">{selectedPoem.title}</h3>
+                    <div className="flex space-x-4">
+                      <button
+                        onClick={() => toggleFavorite(selectedPoem.id)}
+                        className={`text-2xl ${favorites.includes(selectedPoem.id) ? 'text-red-500' : 'text-gray-400'} ${heartAnimation}`}
+                      >
+                        <i className={`${favorites.includes(selectedPoem.id) ? 'fas' : 'far'} fa-heart`}></i>
+                      </button>
+                      <button
+                        onClick={handleClosePoem}
+                        className="text-2xl text-gray-500 hover:text-gray-800"
+                      >
+                        <i className="fas fa-times"></i>
+                      </button>
                     </div>
                   </div>
-                )}
+                  <div className="text-xl text-gray-800 leading-relaxed urdu-text whitespace-pre-line">
+                    {selectedPoem.content}
+                  </div>
+                </div>
               </div>
             )}
           </main>
@@ -417,7 +431,6 @@
       );
     }
 
-    // Render the App
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<App />);
   </script>
